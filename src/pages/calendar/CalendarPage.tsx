@@ -177,7 +177,7 @@ export const CalendarPage: React.FC = () => {
             <h3 className="text-3xl font-bold text-gray-900">{totalHours}h</h3>
             <p className="text-xs text-gray-400">Calculated from live slots</p>
           </div>
-          <div className="p-3 bg-green-500 rounded-xl text-white"><DollarSign size={22} /></div>
+          <div className="p-3 bg-green-100 rounded-xl text-green-600"><DollarSign size={22} /></div>
         </div>
       </div>
 
