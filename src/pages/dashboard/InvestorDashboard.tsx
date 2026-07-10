@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, PieChart, Filter, Search, PlusCircle } from 'lucide-react';
+import { Users, PieChart, Filter, Search, PlusCircle, CreditCard } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card, CardBody, CardHeader } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
@@ -115,7 +115,21 @@ export const InvestorDashboard: React.FC = () => {
             </div>
           </CardBody>
         </Card>
-        
+
+        <Card className="bg-accent-50 border border-accent-100">
+          <CardBody>
+            <div className="flex items-center">
+              <div className="p-3 bg-accent-100 rounded-full mr-4">
+                <CreditCard size={20} className="text-accent-700" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-accent-700">Wallet Balance</p>
+                <h3 className="text-xl font-semibold text-accent-900">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(user.walletBalance)}</h3>
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+
         <Card className="bg-secondary-50 border border-secondary-100">
           <CardBody>
             <div className="flex items-center">

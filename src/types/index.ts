@@ -7,6 +7,7 @@ export interface User {
   role: UserRole;
   avatarUrl: string;
   bio: string;
+  walletBalance: number;
   isOnline?: boolean;
   createdAt: string;
 }

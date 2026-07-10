@@ -175,7 +175,6 @@
 //   );
 // };
 
-
 import React, { useState, useRef } from 'react';
 import { FileText, Upload, Download, Trash2, Share2, PenTool, CheckCircle2, X, Star } from 'lucide-react';
 import { Card, CardHeader, CardBody } from '../../components/ui/Card';
@@ -251,31 +250,40 @@ export const DocumentsPage: React.FC = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const isDrawing = useRef<boolean>(false);
 
-  // 1. Upload Document Feature (PDF/Docs Preview Link Generation)
+  // 1. ADVANCED FILE UPLOAD (FileReader handles Base64 for 100% Iframe Rendering)
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     const fileType = file.name.split('.').pop()?.toUpperCase() || 'PDF';
+    const fileSizeStr = `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
+    const currentDate = new Date().toISOString().split('T')[0];
 
-    const newDoc: DocumentItem = {
-      id: Date.now(),
-      name: file.name,
-      type: fileType,
-      size: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
-      lastModified: new Date().toISOString().split('T')[0],
-      shared: false,
-      status: 'Draft',
-      fileUrl: URL.createObjectURL(file), // Generates local preview blob link
-      signature: null,
-      starred: false,
-      isDeleted: false
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64Url = event.target?.result as string;
+
+      const newDoc: DocumentItem = {
+        id: Date.now(),
+        name: file.name,
+        type: fileType,
+        size: fileSizeStr,
+        lastModified: currentDate,
+        shared: false,
+        status: 'Draft',
+        fileUrl: base64Url, // Storing base64 string ensures rendering inside iframe flawlessly
+        signature: null,
+        starred: false,
+        isDeleted: false
+      };
+
+      setDocuments([newDoc, ...documents]);
+      setSelectedDoc(newDoc);
+      setIsSigning(false);
+      setActiveFilter('Recent Files');
     };
 
-    setDocuments([newDoc, ...documents]);
-    setSelectedDoc(newDoc);
-    setIsSigning(false);
-    setActiveFilter('Recent Files'); 
+    reader.readAsDataURL(file); // Converts file directly to fully readable viewer string
   };
 
   // 2. Download Feature
@@ -372,7 +380,7 @@ export const DocumentsPage: React.FC = () => {
     const pos = getMousePos(canvas, e);
     ctx.lineTo(pos.x, pos.y);
     ctx.lineWidth = 2.5;
-    ctx.strokeStyle = '#1E3A8A'; // Sky blue / navy contrast stroke
+    ctx.strokeStyle = '#1E3A8A'; 
     ctx.stroke();
   };
 
@@ -392,7 +400,7 @@ export const DocumentsPage: React.FC = () => {
     const canvas = canvasRef.current;
     if (!canvas || !selectedDoc) return;
 
-    const sigData = canvas.toDataURL(); // Encodes custom signature image string
+    const sigData = canvas.toDataURL(); 
 
     const updatedDocs = documents.map(doc => 
       doc.id === selectedDoc.id ? { ...doc, status: 'Signed' as const, signature: sigData } : doc
@@ -626,21 +634,29 @@ export const DocumentsPage: React.FC = () => {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {/* Document View Display */}
-                    <div className="p-4 bg-slate-50 border border-slate-100 rounded-xl text-center min-h-[140px] flex flex-col justify-between">
-                      <div className="text-xs text-gray-500 italic space-y-2">
-                        <p className="font-semibold text-gray-700 not-italic border-b pb-1">Secure Preview</p>
-                        <p>Simulated contract overview safe protection active.</p>
-                        {selectedDoc.fileUrl && (
-                          <a href={selectedDoc.fileUrl} target="_blank" rel="noreferrer" className="inline-block text-primary-600 underline font-medium mt-1">
-                            Open Uploaded File Frame
-                          </a>
-                        )}
-                      </div>
+                    {/* Live Iframe Document View Box */}
+                    <div className="bg-slate-50 border border-slate-200 rounded-xl overflow-hidden shadow-inner flex flex-col">
+                      <span className="text-[10px] bg-slate-200 py-1 text-center font-bold text-slate-600 tracking-wider uppercase block">
+                        Live Chamber Monitor
+                      </span>
+                      {selectedDoc.fileUrl ? (
+                        /* Embedded Iframe Render with full Base64 Data Stream Support */
+                        <iframe 
+                          src={selectedDoc.fileUrl} 
+                          title="Document Live Preview Frame" 
+                          className="w-full h-64 border-0"
+                        />
+                      ) : (
+                        /* Placeholder UI state for mock initial files */
+                        <div className="p-4 text-center text-xs text-gray-400 italic min-h-[140px] flex flex-col justify-center items-center">
+                          <p className="font-semibold text-gray-700 not-italic mb-1">Simulated Secure Data</p>
+                          <p>Upload a custom contract file to trigger the live monitor frame immediately.</p>
+                        </div>
+                      )}
 
                       {/* Display Applied Mockup Signature */}
                       {selectedDoc.status === 'Signed' && (
-                        <div className="mt-3 pt-2 border-t border-slate-200 flex flex-col items-center justify-center">
+                        <div className="p-3 bg-white border-t border-slate-200 flex flex-col items-center justify-center">
                           <span className="text-[10px] text-gray-400 uppercase tracking-widest flex items-center gap-1">
                             <CheckCircle2 size={10} className="text-success-500" /> Digitally Authed
                           </span>

@@ -71,6 +71,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         role,
         avatarUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`,
         bio: '',
+        walletBalance: role === 'investor' ? 50000 : 12000,
         isOnline: true,
         createdAt: new Date().toISOString()
       };

@@ -46,6 +46,11 @@ export const Navbar: React.FC = () => {
       path: user ? '/notifications' : '/login',
     },
     {
+      icon: <CircleDollarSign size={18} />,
+      text: 'Payments',
+      path: user ? '/payment' : '/login',
+    },
+    {
       icon: <User size={18} />,
       text: 'Profile',
       path: profileRoute,

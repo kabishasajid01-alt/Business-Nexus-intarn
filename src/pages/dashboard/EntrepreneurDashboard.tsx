@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, Bell, Calendar, TrendingUp, AlertCircle, PlusCircle } from 'lucide-react';
+import { Users, Bell, Calendar, TrendingUp, AlertCircle, PlusCircle, CreditCard } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card, CardBody, CardHeader } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
@@ -94,6 +94,20 @@ export const EntrepreneurDashboard: React.FC = () => {
               <div>
                 <p className="text-sm font-medium text-accent-700">Upcoming Meetings</p>
                 <h3 className="text-xl font-semibold text-accent-900">2</h3>
+              </div>
+            </div>
+          </CardBody>
+        </Card>
+
+        <Card className="bg-success-50 border border-success-100">
+          <CardBody>
+            <div className="flex items-center">
+              <div className="p-3 bg-green-100 rounded-full mr-4">
+                <CreditCard size={20} className="text-success-700" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-success-700">Wallet Balance</p>
+                <h3 className="text-xl font-semibold text-success-900">{new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(user.walletBalance)}</h3>
               </div>
             </div>
           </CardBody>
