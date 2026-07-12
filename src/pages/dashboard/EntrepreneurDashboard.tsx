@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, Bell, Calendar, TrendingUp, AlertCircle, PlusCircle, CreditCard } from 'lucide-react';
+import { Users, Bell, Calendar, TrendingUp, AlertCircle, PlusCircle, CreditCard, ShieldCheck } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card, CardBody, CardHeader } from '../../components/ui/Card';
 import { Badge } from '../../components/ui/Badge';
@@ -52,6 +52,23 @@ export const EntrepreneurDashboard: React.FC = () => {
           </Button>
         </Link>
       </div>
+
+      <Card className="border-primary-200 bg-primary-50">
+        <CardBody>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex items-start">
+              <div className="p-2 rounded-full bg-primary-100 mr-3">
+                <ShieldCheck size={18} className="text-primary-700" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-primary-800">Role-based access is active</p>
+                <p className="text-sm text-primary-700">Your startup workspace is protected with confidential investor requests, secure document sharing, and a 2FA-ready sign-in flow.</p>
+              </div>
+            </div>
+            <Badge variant="primary">Entrepreneur access</Badge>
+          </div>
+        </CardBody>
+      </Card>
       
       {/* Summary cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">

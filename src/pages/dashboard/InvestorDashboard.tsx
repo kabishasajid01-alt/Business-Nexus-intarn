@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Users, PieChart, Filter, Search, PlusCircle, CreditCard } from 'lucide-react';
+import { Users, PieChart, Filter, Search, PlusCircle, CreditCard, ShieldCheck } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { Card, CardBody, CardHeader } from '../../components/ui/Card';
 import { Input } from '../../components/ui/Input';
@@ -66,6 +66,23 @@ export const InvestorDashboard: React.FC = () => {
           </Button>
         </Link>
       </div>
+
+      <Card className="border-secondary-200 bg-secondary-50">
+        <CardBody>
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div className="flex items-start">
+              <div className="p-2 rounded-full bg-secondary-100 mr-3">
+                <ShieldCheck size={18} className="text-secondary-700" />
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-secondary-800">Investor-only workspace</p>
+                <p className="text-sm text-secondary-700">You’re accessing startup profiles through a role-restricted dashboard with secure review controls and protected deal tracking.</p>
+              </div>
+            </div>
+            <Badge variant="secondary">Investor access</Badge>
+          </div>
+        </CardBody>
+      </Card>
       
       {/* Filters and search */}
       <div className="flex flex-col md:flex-row gap-4">

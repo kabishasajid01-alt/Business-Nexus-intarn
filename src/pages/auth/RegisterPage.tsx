@@ -6,6 +6,29 @@ import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { UserRole } from '../../types';
 
+const getPasswordStrength = (value: string) => {
+  const checks = [/.{8,}/, /[A-Z]/, /[0-9]/, /[^A-Za-z0-9]/];
+  const score = checks.reduce((total, regex) => total + (regex.test(value) ? 1 : 0), 0);
+
+  if (!value) {
+    return { score: 0, label: 'Enter a password', color: 'bg-gray-300' };
+  }
+
+  if (score <= 1) {
+    return { score: 1, label: 'Very weak', color: 'bg-error-500' };
+  }
+
+  if (score === 2) {
+    return { score: 2, label: 'Weak', color: 'bg-warning-500' };
+  }
+
+  if (score === 3) {
+    return { score: 3, label: 'Good', color: 'bg-accent-500' };
+  }
+
+  return { score: 4, label: 'Strong', color: 'bg-success-500' };
+};
+
 export const RegisterPage: React.FC = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -17,10 +40,16 @@ export const RegisterPage: React.FC = () => {
   
   const { register } = useAuth();
   const navigate = useNavigate();
+  const passwordStrength = getPasswordStrength(password);
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (passwordStrength.score < 3) {
+      setError('Please choose a stronger password with at least 8 characters, an uppercase letter, a number, and a symbol.');
+      return;
+    }
     
     // Validate passwords match
     if (password !== confirmPassword) {
@@ -122,15 +151,33 @@ export const RegisterPage: React.FC = () => {
               startAdornment={<Mail size={18} />}
             />
             
-            <Input
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              fullWidth
-              startAdornment={<Lock size={18} />}
-            />
+            <div>
+              <Input
+                label="Password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                fullWidth
+                startAdornment={<Lock size={18} />}
+                helperText="Use 8+ characters, an uppercase letter, a number, and a symbol."
+              />
+
+              <div className="mt-2 space-y-2">
+                <div className="flex items-center justify-between text-xs text-gray-500">
+                  <span>Password strength</span>
+                  <span className={`font-medium ${passwordStrength.score >= 3 ? 'text-success-600' : passwordStrength.score === 2 ? 'text-warning-600' : 'text-error-600'}`}>
+                    {passwordStrength.label}
+                  </span>
+                </div>
+                <div className="h-2 w-full rounded-full bg-gray-200 overflow-hidden">
+                  <div
+                    className={`h-full rounded-full transition-all duration-200 ${passwordStrength.color}`}
+                    style={{ width: `${(passwordStrength.score / 4) * 100}%` }}
+                  />
+                </div>
+              </div>
+            </div>
             
             <Input
               label="Confirm password"
